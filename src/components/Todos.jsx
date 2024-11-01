@@ -4,7 +4,15 @@ import Todo from "./Todo";
 export default function Todos({ todos, setTodos }) {
   return (
     <div>
-      {todos && todos.map((todo) => <Todo key={todo.id} todo={todo} />)}
+      {todos &&
+        todos.map((todo) => 
+          <Todo 
+            todos={todos} 
+            setTodos={setTodos} 
+            key={todo.id} 
+            todo={todo}
+          />
+        )}
     </div>
   );
 }
