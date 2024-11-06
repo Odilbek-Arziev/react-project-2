@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Form from "../components/Form";
 import Todos from "../components/Todos";
+import Header from "../components/Header";
 
 export default function Main() {
   const [todos, setTodos] = useState([
@@ -12,9 +13,12 @@ export default function Main() {
   ]);
 
   return (
-    <div>
-      <Form todos={todos} setTodos={setTodos} />
-      <Todos todos={todos} setTodos={setTodos} />
+    <div className="container">
+      <div className="box">
+        <Header />
+        <Form todos={todos} setTodos={setTodos} />
+        <Todos todos={todos} setTodos={setTodos} />
+      </div>
     </div>
   );
 }
