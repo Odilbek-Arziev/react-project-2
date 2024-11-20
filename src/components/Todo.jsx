@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { IonIcon } from "@ionic/react";
 import { trashOutline, createOutline } from "ionicons/icons";
 
 export default function Todo({ todos, setTodos, todo, setEditTodo }) {
+  const [hover, setHover] = useState(null)
+
   function completeTodo(todo) {
     let newTodos = todos.map((task) => {
       if (task.id === todo.id) {
@@ -25,7 +27,11 @@ export default function Todo({ todos, setTodos, todo, setEditTodo }) {
   }
 
   return (
-    <div className="todo">
+    <div
+      className="todo"
+      onMouseEnter={() => setHover(todo.id)}
+      onMouseLeave={() => setHover(null)}
+    >
       <div className={todo.completed ? "completed" : ""}>
         <input
           type="checkbox"
@@ -33,16 +39,22 @@ export default function Todo({ todos, setTodos, todo, setEditTodo }) {
           className="checkbox"
           onChange={() => completeTodo(todo)}
         />
-        <label htmlFor={`check-${todo.id}`}>{todo.title}</label>
+        <label htmlFor={`check-${todo.id}`}>
+          {todo.title.length < 30 ? todo.title : todo.title.slice(0, 30) + '...'}
+        </label>
       </div>
-      <div className="buttons">
-        <button className="button delete" onClick={() => deleteTodo(todo)}>
-          <IonIcon icon={trashOutline} size="medium" />
-        </button>
-        <button className="button edit" onClick={() => setEditTodo(todo)}>
-          <IonIcon icon={createOutline} size="medium" />
-        </button>
-      </div>
+      {
+        hover == todo.id ? (
+          <div className="buttons">
+            <button className="button delete" onClick={() => deleteTodo(todo)}>
+              <IonIcon icon={trashOutline} size="medium" />
+            </button>
+            <button className="button edit" onClick={() => setEditTodo(todo)}>
+              <IonIcon icon={createOutline} size="medium" />
+            </button>
+          </div>
+        ) : null
+      }
     </div>
   );
 }

@@ -35,17 +35,42 @@ export default function Form({ todos, setTodos, editTodo, setEditTodo }) {
     setEditTodo(null);
   }
 
+  function selectHandler(e) {
+    switch (e.target.value) {
+      case 'deleteAll':
+        setTodos([])
+        break
+      case 'completeAll':
+        todos = todos.map((todo) => ({ ...todo, completed: true }))
+        setTodos(todos)
+    }
+  }
   return (
-    <form
-      className="form"
-      onSubmit={(e) => (editTodo ? handleEditTodo(e) : addTodo(e))}
-    >
-      <input
-        type="text"
-        placeholder="Нажмите Enter для добавления задачи"
-        value={value}
-        onInput={(e) => setValue(e.target.value)}
-      />
-    </form>
+    <div className="form-container">
+      <form
+        className="form"
+        onSubmit={(e) => (editTodo ? handleEditTodo(e) : addTodo(e))}
+      >
+        <input
+          type="text"
+          placeholder="Нажмите Enter для добавления задачи"
+          value={value}
+          onInput={(e) => setValue(e.target.value)}
+        />
+      </form>
+      <select name="" id="" onChange={(e) => selectHandler(e)}>
+        <option value="">----</option>
+        {
+          todos.length ? (
+            <option value="deleteAll">Удалить все</option>
+          ) : null
+        }
+        {
+          (todos.length && todos.find((todo) => !todo.completed) ? (
+            <option value="completeAll">Завершить все</option>
+          ) : null)
+        }
+      </select>
+    </div>
   );
 }
