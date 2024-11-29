@@ -10,16 +10,14 @@ export default function Main() {
   const [todos, setTodos] = useState(todosArray);
   const [editTodo, setEditTodo] = useState(null);
 
-  const [posts, setPosts] = useState([]);
+  useEffect(() => load(), []);
 
-  useEffect(() => {
+  function load() {
     axios
-      .get("https://jsonplaceholder.typicode.com/todos?_limit=10")
-      .then((response) => setPosts(response.data))
+      .get("http://localhost:8000/todo")
+      .then((response) => setTodos(response.data))
       .catch((error) => console.error(error));
-  }, []);
-
-  console.log(posts);
+  }
 
   return (
     <div className="container">
@@ -30,12 +28,14 @@ export default function Main() {
           setTodos={setTodos}
           editTodo={editTodo}
           setEditTodo={setEditTodo}
+          onChange={load}
         />
         <Todos
           todos={todos}
           setTodos={setTodos}
           setEditTodo={setEditTodo}
           todosArray={todosArray}
+          onChange={load}
         />
         <Footer todos={todos} />
       </div>
