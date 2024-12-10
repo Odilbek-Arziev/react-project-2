@@ -7,6 +7,7 @@ export default function Form({
   editTodo,
   setEditTodo,
   onChange,
+  allTodos,
 }) {
   const [value, setValue] = useState("");
 
@@ -48,13 +49,21 @@ export default function Form({
   function selectHandler(e) {
     switch (e.target.value) {
       case "deleteAll":
-        setTodos([]);
+        axios
+          .post("http://localhost:8000/todo/delete_all/")
+          .then(() => onChange())
+          .catch((error) => console.error(error));
+
         break;
+
       case "completeAll":
-        todos = todos.map((todo) => ({ ...todo, completed: true }));
-        setTodos(todos);
+        axios
+          .post("http://localhost:8000/todo/complete_all/")
+          .then(() => onChange())
+          .catch((error) => console.error(error));
     }
   }
+
   return (
     <div className="form-container">
       <form
@@ -68,13 +77,17 @@ export default function Form({
           onInput={(e) => setValue(e.target.value)}
         />
       </form>
-      <select name="" id="" onChange={(e) => selectHandler(e)}>
-        <option value="">----</option>
-        {todos.length ? <option value="deleteAll">Удалить все</option> : null}
-        {todos.length && todos.find((todo) => !todo.completed) ? (
-          <option value="completeAll">Завершить все</option>
-        ) : null}
-      </select>
+      {allTodos.length ? (
+        <select name="" id="" onChange={(e) => selectHandler(e)}>
+          <option value="">----</option>
+          {allTodos.length ? (
+            <option value="deleteAll">Удалить все</option>
+          ) : null}
+          {allTodos.length && allTodos.find((todo) => !todo.completed) ? (
+            <option value="completeAll">Завершить все</option>
+          ) : null}
+        </select>
+      ) : null}
     </div>
   );
 }

@@ -4,18 +4,15 @@ export default function Footer({ todos }) {
   return (
     <div className="footer">
       <span>
-        Задач:
-        &nbsp;
+        Задач: &nbsp;
         {todos.length ? todos.length : 0}
       </span>
       <span>
-        Открыты:
-        &nbsp;
+        Открыты: &nbsp;
         {todos.length ? todos.filter((task) => !task.completed).length : 0}
       </span>
       <span>
-        Завершены:
-        &nbsp;
+        Завершены: &nbsp;
         {todos.length ? todos.filter((task) => task.completed).length : 0}
       </span>
     </div>

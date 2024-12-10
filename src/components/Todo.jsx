@@ -2,9 +2,20 @@ import React, { useState } from "react";
 import { IonIcon } from "@ionic/react";
 import { trashOutline, createOutline } from "ionicons/icons";
 import axios from "axios";
+import Modal from "./Modal";
 
 export default function Todo({ todos, setTodos, todo, setEditTodo, onChange }) {
   const [hover, setHover] = useState(null);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalTitle, setModalTitle] = useState("");
+
+  const openModal = (title) => {
+    setModalTitle(title);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => setIsModalOpen(false);
 
   function completeTodo(todo) {
     axios
@@ -17,16 +28,10 @@ export default function Todo({ todos, setTodos, todo, setEditTodo, onChange }) {
   }
 
   function deleteTodo(todo) {
-    let confirmation = window.confirm(
-      `Подтвердите удаление задачи №${todo.id}`
-    );
-
-    if (confirmation) {
-      axios
-        .delete("http://localhost:8000/todo/" + todo.id)
-        .then(() => onChange())
-        .catch((error) => console.error(error));
-    }
+    axios
+      .delete("http://localhost:8000/todo/" + todo.id)
+      .then(() => onChange())
+      .catch((error) => console.error(error));
   }
 
   return (
@@ -35,6 +40,14 @@ export default function Todo({ todos, setTodos, todo, setEditTodo, onChange }) {
       onMouseEnter={() => setHover(todo.id)}
       onMouseLeave={() => setHover(null)}
     >
+      {isModalOpen && (
+        <Modal
+          title={modalTitle}
+          onConfirm={() => deleteTodo(todo)}
+          closeModal={closeModal}
+        />
+      )}
+
       <div className={todo.completed ? "completed" : ""}>
         <input
           type="checkbox"
@@ -48,9 +61,13 @@ export default function Todo({ todos, setTodos, todo, setEditTodo, onChange }) {
             : todo.title.slice(0, 30) + "..."}
         </label>
       </div>
+    
       {hover == todo.id ? (
         <div className="buttons">
-          <button className="button delete" onClick={() => deleteTodo(todo)}>
+          <button
+            className="button delete"
+            onClick={() => openModal("Вы действительно хотите удалить задачу?")}
+          >
             <IonIcon icon={trashOutline} size="medium" />
           </button>
           <button className="button edit" onClick={() => setEditTodo(todo)}>

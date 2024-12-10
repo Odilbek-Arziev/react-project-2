@@ -7,7 +7,8 @@ import { todosArray } from "../utils/todos";
 import axios from "axios";
 
 export default function Main() {
-  const [todos, setTodos] = useState(todosArray);
+  const [todos, setTodos] = useState([]);
+  const [allTodos, setAllTodos] = useState([]);
   const [editTodo, setEditTodo] = useState(null);
 
   useEffect(() => load(), []);
@@ -15,7 +16,10 @@ export default function Main() {
   function load() {
     axios
       .get("http://localhost:8000/todo")
-      .then((response) => setTodos(response.data))
+      .then((response) => {
+        setTodos(response.data);
+        setAllTodos(response.data);
+      })
       .catch((error) => console.error(error));
   }
 
@@ -29,6 +33,7 @@ export default function Main() {
           editTodo={editTodo}
           setEditTodo={setEditTodo}
           onChange={load}
+          allTodos={allTodos}
         />
         <Todos
           todos={todos}
@@ -37,7 +42,7 @@ export default function Main() {
           todosArray={todosArray}
           onChange={load}
         />
-        <Footer todos={todos} />
+        <Footer todos={allTodos} />
       </div>
     </div>
   );
