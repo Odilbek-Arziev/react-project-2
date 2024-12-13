@@ -33,7 +33,6 @@ export default function Todo({ todos, setTodos, todo, setEditTodo, onChange }) {
       .then(() => onChange())
       .catch((error) => console.error(error));
   }
-
   return (
     <div
       className="todo"
